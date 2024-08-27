@@ -57,7 +57,15 @@ def generate_sequences(start_tokens,tokenizer,hf_model,batch_size=16,max_new_tok
         # measure the time
         start = time.time()
         # Generate text for the batch
-        gen_kwargs = {"max_new_tokens": max_new_tokens, "top_p": 0.8, "temperature": 0.99, "do_sample": True, "repetition_penalty": 1.1}
+        eos_token_id = tokenizer.eos_token_id  # Use the EOS token from your tokenizer
+        gen_kwargs = {
+            "max_new_tokens": max_new_tokens,
+            "top_p": 0.8,
+            "temperature": 0.99,
+            "do_sample": True,
+            "repetition_penalty": 1.1,
+            "eos_token_id": eos_token_id  # Explicitly set the EOS token ID
+        }        
         output = model.generate(inputs['input_ids'],attention_mask=inputs['attention_mask'], **gen_kwargs)
         output = output.cpu()
         end = time.time()
@@ -72,7 +80,6 @@ def generate_sequences(start_tokens,tokenizer,hf_model,batch_size=16,max_new_tok
         time_taken = end - start
         tokens_generated = sum([len(seq) for seq in output])
         # log the time taken per batch
-        
         logging.info(f"Tokens per second: {tokens_generated/time_taken}")
 
 
