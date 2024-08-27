@@ -1,3 +1,6 @@
+# usage: python generate_random_sequences.py --num-seqs 16 --input-file shard_00000000_processed.jsonl --output-file finewebgen.jsonl --hf-model "HuggingFaceFW/ablation-model-fineweb-edu"
+# usage: python generate_random_sequences.py --num-seqs 16 --input-file shard_00000000_processed.jsonl --output-file dclmgen.jsonl --hf-model "apple/DCLM-Baseline-7B"
+
 import json
 import random
 import torch
@@ -34,9 +37,9 @@ def generate_start_tokens(tokenizer,N,file_path = 'shard_00000000_processed.json
     return start_tokens
 
 
-def generate_sequences(start_tokens,tokenizer,batch_size=16,max_new_tokens=800,output_file='output.jsonl'):
+def generate_sequences(start_tokens,tokenizer,hf_model,batch_size=16,max_new_tokens=800,output_file='output.jsonl'):
 
-    model = AutoModelForCausalLM.from_pretrained("apple/DCLM-Baseline-7B")
+    model = AutoModelForCausalLM.from_pretrained(hf_model)
     # Move model to GPU
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     model.to(device)
@@ -55,7 +58,7 @@ def generate_sequences(start_tokens,tokenizer,batch_size=16,max_new_tokens=800,o
         start = time.time()
         # Generate text for the batch
         gen_kwargs = {"max_new_tokens": max_new_tokens, "top_p": 0.8, "temperature": 0.99, "do_sample": True, "repetition_penalty": 1.1}
-        output = model.generate(inputs['input_ids'], **gen_kwargs)
+        output = model.generate(inputs['input_ids'],attention_mask=inputs['attention_mask'], **gen_kwargs)
         output = output.cpu()
         end = time.time()
     
@@ -84,16 +87,17 @@ def main():
     parser.add_argument('--max-new-tokens', type=int, default=800, help='Maximal number of tokens to generate')
     parser.add_argument('--input-file', type=str, required=True, help='Path to the jsonl input file, for determining the distribution of the starting token')
     parser.add_argument('--output-file', type=str, required=True, help='Path to the jsonl output file, for writing the seqs to')
-    
+    parser.add_argument('--hf-model', type=str, default="apple/DCLM-Baseline-7B", help='HuggingFace model to use for generation')
+
     # Parse the arguments
     args = parser.parse_args()
     logging.info(f"Arguments received: {args}")
         
     # Load tokenizer and model
-    tokenizer = AutoTokenizer.from_pretrained("apple/DCLM-Baseline-7B")
+    tokenizer = AutoTokenizer.from_pretrained(args.hf_model)
     
     start_tokens = generate_start_tokens(tokenizer,args.num_seqs,file_path = args.input_file)
-    generate_sequences(start_tokens,tokenizer,batch_size=args.batch_size,max_new_tokens=args.max_new_tokens,output_file=args.output_file)
+    generate_sequences(start_tokens,tokenizer,args.hf_model,batch_size=args.batch_size,max_new_tokens=args.max_new_tokens,output_file=args.output_file)
 
 # Entry point of the script
 if __name__ == "__main__":
