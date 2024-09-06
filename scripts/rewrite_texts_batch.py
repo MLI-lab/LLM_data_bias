@@ -3,7 +3,7 @@
 
 # usage:
 #   Submit a batch request, to re-write the texts in the input file:
-#       python rewrite_texts_batch.py --submit c4_train_samples.json
+#       python rewrite_texts_batch.py --submit c4_train_samples.jsonl
 #   Retrieve the batch results, and save them to the output file:  
 #       python rewrite_texts_batch.py --retrieve batch_NsJSbrhKSRybSWfXKPmM52Ow --output-file c4_rewritten.jsonl
 # 
@@ -103,7 +103,7 @@ def main():
                 for line in file_response.text.split("\n"):
                     if line.strip():  # Skip empty lines
                         data = json.loads(line)
-                        file.write(json.dumps({'text': data['response']['body']['choices'][0]['message']['content'] + "<|endoftext|>"}) + '\n')
+                        file.write(json.dumps({'text': data['response']['body']['choices'][0]['message']['content']}) + '\n')
 
 # Entry point of the script
 if __name__ == "__main__":
