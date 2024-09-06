@@ -38,7 +38,7 @@ def main():
 
         # Load JSON file
         with open(args.submit, "r") as f:
-            data = json.load(f)
+            data = [json.loads(line) for line in f]
 
         # obtain the part before .jsonl from input file
         batch_file_name = args.submit.split(".")[0] + "_batch.jsonl"
