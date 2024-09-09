@@ -52,7 +52,7 @@ def main():
                                     'url': '/v1/chat/completions', 
                                     'body': {'model': 'gpt-4o-mini', 
                                     'messages': [{'role': 'system', 'content': 'You are a helpful assistant.'}, 
-                                                 {'role': 'user', 'content': "Rewrite this text while preserving the accuracy of its content: " + entry["text"] }], 
+                                                 {'role': 'user', 'content': "Rewrite the following text while preserving the accuracy of its content; do not use newlines, new paragraphs, itemization, enumeration, and other formating, unless it is important or appropriate for better readability: \n " + entry["text"] }], 
                                     'max_tokens': 2048}})
                 # Write without adding newline at the end for the last item
                 if i < len(data) - 1:
