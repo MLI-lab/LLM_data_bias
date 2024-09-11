@@ -1,0 +1,7 @@
+name: "c4_fw"
+
+positive_train: "./data/FineWeb/"
+negative_train: "./data/c4/"
+
+positive_test: "./data/FineWeb_test/"
+negative_test: "./data/c4_test/"
