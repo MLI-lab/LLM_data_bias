@@ -186,7 +186,7 @@ def group_by_keys_nothrow(data, keys=base_plus_ext, lcase=True, suffixes=None, h
 def tarfile_to_samples_nothrow(src, handler=log_and_continue):
     # NOTE this is a re-impl of the webdataset impl with group_by_keys that doesn't throw
     streams = url_opener(src, handler=handler)
-    files = tar_file_expander(streams, handler=handler)
+    files = tar_file_expander(streams, handler=handler, eof_value=None)
     samples = group_by_keys_nothrow(files, handler=handler)
     return samples
 
@@ -205,10 +205,12 @@ def pytorch_worker_seed(increment=0):
     return wds.utils.pytorch_worker_seed()
 
 
-_SHARD_SHUFFLE_SIZE = 2000
-_SHARD_SHUFFLE_INITIAL = 2000 #500
-_SAMPLE_SHUFFLE_SIZE = 20000
-_SAMPLE_SHUFFLE_INITIAL = 20000 #4000
+
+
+_SHARD_SHUFFLE_SIZE = 100000    #10000 
+_SHARD_SHUFFLE_INITIAL = 100000 #10000
+_SAMPLE_SHUFFLE_SIZE = 200000    #50000
+_SAMPLE_SHUFFLE_INITIAL = 200000 #50000
 
 
 class detshuffle2(wds.PipelineStage):

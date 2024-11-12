@@ -509,22 +509,23 @@ def create_model(args):
 def create_classif_model(args):
     model = Transformer(create_params(args))
     
-    checkpoint = pt_load(args.classif_model_path, map_location="cpu")
-    model.load_state_dict(checkpoint["state_dict"])
+    if args.classif_model_path is not None:
+        checkpoint = pt_load(args.classif_model_path, map_location="cpu")
+        model.load_state_dict(checkpoint["state_dict"])
     
     dim = model.output.in_features
     model.output = nn.Linear(dim, args.num_classes, bias = False)
-    
+        
     return model
     
     
-def test_classif_model(args, model_path):
+def test_classif_model(args):
     model = Transformer(create_params(args))
     
     dim = model.output.in_features
     model.output = nn.Linear(dim, args.num_classes, bias = False)
     
-    checkpoint = pt_load(model_path, map_location="cpu")
+    checkpoint = pt_load(args.classif_model_path, map_location="cpu")
     model.load_state_dict(checkpoint["state_dict"])
     
     return model    

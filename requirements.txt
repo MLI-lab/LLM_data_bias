@@ -1,4 +1,4 @@
-torch==2.2.2
+torch
 xformers>=0.0.22
 tiktoken
 wandb

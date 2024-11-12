@@ -804,7 +804,8 @@ def parse_args(args):
         type=str,
         default=None,
         help="Path of the pretrained model to be finetuned for classification.",
-    )    
+    )
+    
     add_model_args(parser)
 
     config = maybe_load_config(parser, args)
