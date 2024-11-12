@@ -9,3 +9,7 @@ cd LLM_data_bias
 pip install -r requirements.txt
 pip install --editable .
 ```
+
+## Data Preparation
+
+Check the [data preparation](https://github.com/MLI-lab/LLM_data_bias/tree/main/data_preparation) section for instructions on how to download and process the datasets.
