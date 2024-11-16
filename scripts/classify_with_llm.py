@@ -139,15 +139,19 @@ def main():
             # file_response is the content of the JSONL file, which is iterable
 
 
-            # append output to jsonl file
+            # dictionary to count the number of examples in each category + invalid
+            category_counts = {category: 0 for category in categories}
+            category_counts["Invalid"] = 0
+
             with open(args.output_file, 'w') as output_file, open(args.input_file, "r") as input_file:
                 
-                for i, (line, record) in enumerate(zip(file_response.text.split("\n"), input_file)):
+                for i, (line, line_input) in enumerate(zip(file_response.text.split("\n"), input_file)):
 
                     if line.strip():  # Check if the line has content to avoid empty lines
                         data = json.loads(line)
                         # load one line from input_file
-                        text = record["text"]
+                        data_input = json.loads(line_input.strip())
+                        text = data_input["text"]
                     
                         response = data['response']['body']['choices'][0]['message']['content']
                         response_end = response[-20:]
@@ -164,11 +168,13 @@ def main():
                                 break
                         else:
                             label = "Invalid"
+                        category_counts[label] += 1
                         
                         json_data = json.dumps({'label': label,'text': text})
                         output_file.write(json_data + "\n")
-                        
-
+            # print the category counts formated well
+            for category, count in category_counts.items():
+                print(f"{category}: {count}")
 
 # Entry point of the script
 if __name__ == "__main__":
