@@ -65,7 +65,7 @@ def main():
     logging.info(f"Arguments received: {args}")
 
     thematic_categories = ['Advertisement', 'Business and Finance', 'News and Media', 'Politics and Policy', 'Science', 'Technology', 'Health, Wellness, and Fitness', 'Food and Nutrition', 'Arts and Entertainment', 'Society and Culture', 'Lifestyle and Recreation', 'Education', 'Community', 'Other']
-    purpose_categories = ['Announcing', 'Analytical', 'Descriptive/Informational', 'Educational', 'Persuasive', 'Narrative/Storytelling', 'Instructional', 'Opiniated', 'Promotional', 'Other']
+    purpose_categories = ['Informative', 'Analytical/Explanatory', 'Educational/Instructional', 'Persuasive', 'Promotional', 'Narrative/Storytelling', 'Opinionated', 'Other']
 
     prompt = """Classify the text according to the thematic categories: 
     `Advertisement', 
