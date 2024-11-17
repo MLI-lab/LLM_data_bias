@@ -64,17 +64,36 @@ def main():
     args = parser.parse_args()
     logging.info(f"Arguments received: {args}")
 
-    categories = ['Advertisement', 'Business and industrial', 'News and media', 'Science and health', 'Technology', 'Arts and entertainment', 'Hobbies and leisure', 'Travel', 'Home and garden', 'Government and law', 'Community', 'Hobbies and leisure', 'Other']
+    thematic_categories = ['Advertisement', 'Business and Finance', 'News and Media', 'Politics and Policy', 'Science', 'Technology', 'Health, Wellness, and Fitness', 'Food and Nutrition', 'Arts and Entertainment', 'Society and Culture', 'Lifestyle and Recreation', 'Education', 'Community', 'Other']
+    purpose_categories = ['Announcing', 'Analytical', 'Descriptive/Informational', 'Educational', 'Persuasive', 'Narrative/Storytelling', 'Instructional', 'Opiniated', 'Promotional', 'Other']
 
-    prompt = """Classify the text according to the categories: 
-    `Advertisement', `Business and industrial', 
-    `News and media', `Science and health',`Technology', 
-    `Arts and entertainment', `Hobbies and leisure', `Travel', 
-    `Home and garden', `Government and law', `Community', 
-    `Hobbies and leisure', `Other'. 
+    prompt = """Classify the text according to the thematic categories: 
+    `Advertisement', 
+    `Business and Finance', 
+    `News and Media',
+    `Politics and Policy',
+    `Science' (physics, biology, chemistry, astronomy, and academic studies), 
+    `Technology' (software, hardware, and gadgets),
+    'Health, Wellness, and Fitness',
+    `Food and Nutrition',
+    `Arts and Entertainment', 
+    `Society and Culture',
+    `Lifestyle and Recreation',
+    `Education',
+    `Community' (user reviews, forums, social media, etc), 
+    `Other'. 
     If the text is an advertisement, always choose `Advertisement', else choose the most appropriate category. 
     If none of the categories are appropriate, choose `Other'.
-    Justiy your answer with a short explanation, and end with the category name."""
+    Also classify the text according to the purpose of the text:
+    `Informative',
+    `Analytical/Explanatory',
+    `Educational/Instructional',
+    `Persuasive',
+    `Promotional',
+    `Narrative/Storytelling',
+    `Opinionated',
+    `Other'.
+    Justiy your answer with an explanation, and end with the names of the two categories."""
 
     if args.submit:
         ### generate ..._batch.jsonl file for the batch request
@@ -140,8 +159,10 @@ def main():
 
 
             # dictionary to count the number of examples in each category + invalid
-            category_counts = {category: 0 for category in categories}
-            category_counts["Invalid"] = 0
+            thematic_category_counts = {category: 0 for category in thematic_categories}
+            thematic_category_counts["Invalid"] = 0
+            purpose_categories_counts = {category: 0 for category in purpose_categories}
+            purpose_categories_counts["Invalid"] = 0
 
             with open(args.output_file, 'w') as output_file, open(args.input_file, "r") as input_file:
                 
@@ -154,27 +175,45 @@ def main():
                         text = data_input["text"]
                     
                         response = data['response']['body']['choices'][0]['message']['content']
-                        response_end = response[-20:]
+                        response_end = response[-100:]
                         custom_id = data['custom_id']
                         # extract number from custom_id
                         idx = int(custom_id.split("-")[-1])
                         # check if idx is equal to i
                         assert idx == i, f"idx: {idx}, i: {i}"
 
-                        # check which category is in the response
-                        for category in categories:
+                        # check which thematic category is in the response
+                        for category in thematic_categories:
                             if category in response_end:
-                                label = category
+                                thematic_label = category
                                 break
                         else:
-                            label = "Invalid"
-                        category_counts[label] += 1
+                            thematic_label = "Invalid"
+                        thematic_category_counts[thematic_label] += 1
+
+                        # check which purpose category is in the response
+                        for category in purpose_categories:
+                            if category in response_end:
+                                purpose_label = category
+                                break
+                        else:
+                            purpose_label = "Invalid"
+                        purpose_categories_counts[purpose_label] += 1
+
+
                         
-                        json_data = json.dumps({'label': label,'text': text})
+                        json_data = json.dumps({'thematic_label': thematic_label,'purpose_label': purpose_label, 'text': text, 'response': response})
                         output_file.write(json_data + "\n")
-            # print the category counts formated well
-            for category, count in category_counts.items():
-                print(f"{category}: {count}")
+            
+            # sum over dictionary to get number of examples
+            number_examples = sum(thematic_category_counts.values())
+            # print the thematic category counts formated well
+            print("Thematic category counts:")
+            for category, count in thematic_category_counts.items():
+                print(f"\t{category}: {count/number_examples*100:.2f}%")
+            print("Purpose category counts:")
+            for category, count in purpose_categories_counts.items():
+                print(f"\t{category}: {count/number_examples*100:.2f}%")
 
 # Entry point of the script
 if __name__ == "__main__":
