@@ -26,6 +26,9 @@ After tokenizing the data, all training shards should be placed be in the same d
 `train_dir` <br/>
        `├──0-shard-0000000.tar`   <br/>
               `├──0-shard-0000001.tar`   <br/>
+                  │<br/>
+                  │...<br/>
+                  │<br/>
                             `├──1-shard-0000000.tar`   <br/>
        `└──1-shard-0000001.tar`   <br/>
 
@@ -36,9 +39,9 @@ After tokenizing the data, all training shards should be placed be in the same d
 By default, the open_lm repoistory picks shards to train on by sampling with replacement. To sample without replacement, which is recommended, we create a manifest file which specifies the exact shards to train on. The training script then samples from the specified shards without replacement. To create the manifest file, run the following from the root directory (LLM_data_bias):
 
 ```
-python -m open_lm.utils.make_wds_manifest --data-dir path_to_output_tokenized_data
+python -m open_lm.utils.make_wds_manifest --data-dir path_to_train_dir
 ```
 
-This will create a ``manifest.jsonl`` in the same directory as the tokenized data. This file is used in the training script to specify the path of the training data. 
+This will create a ``manifest.jsonl`` in the same directory as the training shards. This file is used in the training script to specify the path of the training data. 
 
 ## Test data
