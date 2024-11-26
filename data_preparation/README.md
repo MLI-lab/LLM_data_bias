@@ -45,3 +45,11 @@ python -m open_lm.utils.make_wds_manifest --data-dir path_to_train_dir
 This will create a ``manifest.jsonl`` in the same directory as the training shards. This file is used in the training script to specify the path of the training data. 
 
 ## Test data
+
+Each test sequence is classified individually as a whole. There is no concatenation or splitting like in training. The test sequences from one dataset are tokenized and saved as a list of tensors. To prepare the test data, run the following from the root directory (LLM_data_bias): 
+
+```
+    python open_lm/datapreprocess/prepare_test_data.py \
+    --input-files path_to_test_set/test.jsonl
+    --output-dir path_to_tokenized_test_data/test.pt
+```  
