@@ -50,6 +50,6 @@ Each test sequence is classified individually as a whole. There is no concatenat
 
 ```
     python open_lm/datapreprocess/prepare_test_data.py \
-    --input-files path_to_test_set/test.jsonl
-    --output-dir path_to_tokenized_test_data/test.pt
+    --input-file path_to_test_set/test.jsonl
+    --output-file path_to_tokenized_test_data/test.pt
 ```  
