@@ -82,4 +82,4 @@ python open_lm/eval.py \
   --base-path path_to_test_sets
 ```
 
-This example evaluates a 3-way classifier. The test sets (`C4.pt`, `FW.pt`, `RW.pt`) should be placed in `base-path` with the same order as during training: C4 (class 0), FW (class 1), RW (class 2). Ensure that the number of strings in `test-sets` matches `num-classes`. The script adds the `.pt` extension automatically to the strings in `test-sets`. 
+This example evaluates a 3-way classifier. The test sets (`C4.pt`, `FW.pt`, `RW.pt`) should be placed in `base-path` with the same order as during training: C4 (class 0), FW (class 1), RW (class 2). Ensure that the number of strings in `test-sets` matches `num-classes`. The script adds the `.pt` extension automatically to the strings in `test-sets`. The script runs on one GPU by default.  
