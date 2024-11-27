@@ -69,3 +69,17 @@ The command for classification is similar to pretraining, but the following thre
 - `num-classes`: Number of classification classes
 - `classif-model-path`: Path to pretrained model. Can be omitted if you want to run classification from scratch, instead of finetuning from a pretrained model
 
+## Evaluation
+
+To evaluate the classification model, run the following command:
+
+```
+python open_lm/eval.py \
+  --model open_lm_160m \
+  --classif-model-path path_to_classification_model \
+  --num-classes 3 \
+  --test-sets C4 FW RW \
+  --base-path path_to_test_sets
+```
+
+This example evaluates a 3-way classifier. The test sets (`C4.pt`, `FW.pt`, `RW.pt`) should be placed in `base-path` with the same order as during training: C4 (class 0), FW (class 1), RW (class 2). Ensure that the number of strings in `test-sets` matches `num-classes`. The script adds the `.pt` extension automatically to the strings in `test-sets`. 
