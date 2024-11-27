@@ -45,11 +45,27 @@ torchrun --nproc-per-node 8 -m open_lm.main   \
 
 Some of the important arguments are:
 
-- `nproc-per-node`: number of GPUs
-- `model`: model size, our default model size is 160M. The available model sizes can be found in [model_configs](https://github.com/MLI-lab/LLM_data_bias/tree/main/open_lm/model_configs)
+- `nproc-per-node`: Number of GPUs
+- `model`: Model size, our default model size is 160M. The available model sizes can be found in [model_configs](https://github.com/MLI-lab/LLM_data_bias/tree/main/open_lm/model_configs)
 - `dataset-manifest`: Path to the manifest file
 - `train-num-samples`: Number of tokens per epoch. For the 160M model, 3.2B tokens are used (Chinchilla optimal)
 - `epochs`: Model weights and optimizer are saved every epoch. To save intermediate checkpoints, set it to a higher value. For example setting `epochs` to 10, and `train-num-samples` to 320M will overall use 3.2B tokens
 - `report-to wandb` and `wandb-project-name`: Omit if logging to wandb is not desired
 - `logs`: Path where logging files and checkpoints are saved
 - `name`: Project name. This creates a directory in `logs` with the project name
+
+
+## Classification
+
+The command for classification is similar to pretraining, but the following three arguments are added:
+
+```
+--classification True \
+--num-classes 3 \
+--classif-model-path path_to_pretrained_model
+```
+
+- `classification`: Indicates that we are doing classification not pretraining. Default value is False
+- `num-classes`: Number of classification classes
+- `classif-model-path`: Path to pretrained model. Can be omitted if you want to run classification from scratch, instead of finetuning from a pretrained model
+
