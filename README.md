@@ -108,3 +108,17 @@ To remove formatting, run the following command:
 ```
 python scripts/remove_formatting.py input_file.jsonl output_file.jsonl
 ```
+
+## Bag of Words
+
+To train a bag of words model for a 2-way classification task, run the following command:
+
+```
+python scripts/train_BoW.py class0_train.jsonl class1_train.jsonl
+```
+
+For evaluation:
+
+```
+python scripts/test_BoW.py class0_test.jsonl class1_test.jsonl
+```
