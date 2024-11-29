@@ -1,4 +1,4 @@
-##Takes as input one jsonl file, tokenizes it, and saves it as pytorch tensors in one output file
+##Takes as input one jsonl file, tokenizes it, and saves it as a list of pytorch tensors in one output file
 
 import json
 import torch
