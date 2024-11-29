@@ -83,3 +83,20 @@ python open_lm/eval.py \
 ```
 
 This example evaluates a 3-way classifier. The test sets (`C4.pt`, `FW.pt`, `RW.pt`) are specified with the same order as during training: C4 (class 0), FW (class 1), RW (class 2), and should be placed in `base-path`. Ensure that the number of strings in `test-sets` matches `num-classes`. The script adds the `.pt` extension automatically to the strings in `test-sets`. The script runs on one GPU by default.  
+
+
+## Rewriting
+
+We rewrite text with OpenAI's batch API. After obtaining an API key, set it as an environment variable with export `OPENAI_API_KEY= YOUR_API_KEY`, then run the following command to rephrase text:  
+
+```
+python scripts/rewrite_texts_batch_auto.py \
+  --input-file path_to_input_file \
+  --output-file path_to_output_file \
+  --batch-size 2000 \
+  --prompt prompt1
+```
+
+- `input-file` and `output-file`: jsonl files containing the original and rephrased texts respectively. The text is assumed to have the key "text"
+- `batch-size`: number of sequences being rephrased. Set to 2000 for a tier 1 OpenAI account
+- `prompt`: rephrasing prompt. Set to prompt1 or prompt2 or prompt3
