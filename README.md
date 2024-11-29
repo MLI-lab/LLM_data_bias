@@ -122,3 +122,17 @@ For evaluation:
 ```
 python scripts/test_BoW.py class0_test.jsonl class1_test.jsonl
 ```
+
+## Dataset Categorization
+
+Similar to rewriting, classifying text sequences of a dataset into one of the 13 thematic categories requires an OpenAI API key. After setting the API key as an environment variable run:
+
+```
+python scripts/categorise_text.py --submit --number-examples 2000 --input-file input_file.jsonl
+```
+
+where input file is a jsonl file with keys "text" and "url". This will print a batch number that should be copied and used to retrieve the results with: 
+
+```
+python scripts/categorise_text.py --retrieve BATCH_NUMBER --output-file output_results.jsonl
+```
