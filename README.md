@@ -100,3 +100,11 @@ python scripts/rewrite_texts_batch_auto.py \
 - `input-file` and `output-file`: jsonl files containing the original and rephrased texts respectively. The text is assumed to have the key "text"
 - `batch-size`: number of sequences being rephrased. Set to 2000 for a tier 1 OpenAI account
 - `prompt`: rephrasing prompt. Set to prompt1 or prompt2 or prompt3
+
+## Remove Formatting
+
+To remove formatting, run the following command:
+
+```
+python scripts/remove_formatting.py input_file.jsonl output_file.jsonl
+```
