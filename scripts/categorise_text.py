@@ -3,10 +3,10 @@
 # Batches are submitted and retrieved following https://platform.openai.com/docs/guides/batch/getting-started
 
 # usage:
-#   Submit a batch request, to classify number-examples from the dataset:
-#       python construct_test_set_stage1.py --submit --dataset mlfoundations-dev/webinstruct_v1_beta_stage_3_gpt-4o-mini --number-examples 5000
+#   Submit a batch request, to classify number-examples from the dataset, copy the batch number printed when submitting:
+#       python categorise_text.py --submit --number-examples 2000 --input-file input_file.jsonl
 #   Retrieve the batch results, and save them to the output file:  
-#       python construct_test_set_stage1.py --retrieve batch_67238f2bfe1081908bfcb7e20b126a94 --output-file-prefix fasttext_examples
+#       python categorise_text.py --retrieve BATCH_NUMBER --output-file output_results.jsonl
 # 
 # An openai account is required, and the API key should be set as an environment variable. 
 # export OPENAI_API_KEY="your-api-key"
