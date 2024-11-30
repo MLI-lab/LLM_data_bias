@@ -1,5 +1,21 @@
-# usage: python generate_random_sequences.py --num-seqs 16 --input-file shard_00000000_processed.jsonl --output-file finewebgen.jsonl --hf-model "HuggingFaceFW/ablation-model-fineweb-edu"
-# usage: python generate_random_sequences.py --num-seqs 16 --input-file shard_00000000_processed.jsonl --output-file dclmgen.jsonl --hf-model "apple/DCLM-Baseline-7B"
+# Section 5 in the paper
+# --hf-model "tiiuae/falcon-7b" # RefinedWeb (pretrained)
+# --hf-model "apple/DCLM-Baseline-7B"  # DCLM-Baseline (pretrained)
+# --hf-model "HuggingFaceFW/ablation-model-fineweb-edu" #FineWeb-Edu (pretrained)
+
+# Section  5.1 in the paper
+# --hf-model "tiiuae/falcon-7b-instruct" # RefinedWeb (finetuned)
+# --hf-model "mlfoundations/dclm-7b-it" # DCLM (finetuned)
+
+# Section 6 in the paper
+# --hf-model "MBZUAI-LLM/SlimPajama-DC" # SlimPajama (pretrained)
+# When using this model, modify the code below to inlcude "revision" when loading the model and the tokenizer as such:
+# tokenizer = AutoTokenizer.from_pretrained(hf_model, revision="SlimPajama-DC-6")
+# model = AutoModelForCausalLM.from_pretrained(hf_model, revision="SlimPajama-DC-6")
+# revision= "SlimPajama-DC-6" is for the LLM pretrained on all 7 domains
+# revision= "SlimPajama-DC-5" is for the LLM pretrained on only 4 domains
+# More info can be found here: https://huggingface.co/MBZUAI-LLM/SlimPajama-DC
+
 
 import json
 import random
@@ -14,7 +30,7 @@ import logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # Generates N random start tokens from a given file
-def generate_start_tokens(tokenizer, N, file_path='shard_00000000_processed.jsonl'):
+def generate_start_tokens(tokenizer, N, file_path='input_file.jsonl'):
     # Read texts from file
     texts = []
     with open(file_path, 'r') as file:
@@ -54,7 +70,7 @@ def generate_random_tokens(tokenizer, N):
 def generate_sequences(start_tokens, tokenizer, hf_model, batch_size=16, max_new_tokens=800, output_file='output.jsonl'):
     model = AutoModelForCausalLM.from_pretrained(hf_model)
     # Move model to GPU
-    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
 
     # Process inputs in batches
