@@ -6,7 +6,6 @@ import random
 import torch
 import time
 from open_lm.hf import *
-
 from transformers import AutoTokenizer, AutoModelForCausalLM
 import argparse
 import logging
@@ -14,9 +13,8 @@ import logging
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-
-# generates N random start tokens, from the same distribution as the starting tokens in file_path
-def generate_start_tokens(tokenizer,N,file_path = 'shard_00000000_processed.jsonl'):
+# Generates N random start tokens from a given file
+def generate_start_tokens(tokenizer, N, file_path='shard_00000000_processed.jsonl'):
     # Read texts from file
     texts = []
     with open(file_path, 'r') as file:
@@ -36,9 +34,24 @@ def generate_start_tokens(tokenizer,N,file_path = 'shard_00000000_processed.json
     start_tokens = random.sample(start_tokens, N)
     return start_tokens
 
+# Generates N random tokens sampled from the tokenizer's vocabulary
+def generate_random_tokens(tokenizer, N):
+    vocab_size = tokenizer.vocab_size
+    random_tokens = []
 
-def generate_sequences(start_tokens,tokenizer,hf_model,batch_size=16,max_new_tokens=800,output_file='output.jsonl'):
+    for _ in range(N):
+        # Randomly sample token IDs from the vocabulary range
+        token_id = random.randint(0, vocab_size - 1)
+        # Convert token ID to tensor and structure like input
+        input = {
+            "input_ids": torch.tensor([[token_id]]),
+            "attention_mask": torch.tensor([[1]]),
+        }
+        random_tokens.append(input)
 
+    return random_tokens
+
+def generate_sequences(start_tokens, tokenizer, hf_model, batch_size=16, max_new_tokens=800, output_file='output.jsonl'):
     model = AutoModelForCausalLM.from_pretrained(hf_model)
     # Move model to GPU
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -54,7 +67,7 @@ def generate_sequences(start_tokens,tokenizer,hf_model,batch_size=16,max_new_tok
     
         inputs = {'input_ids': input_ids, 'attention_mask': attention_mask}
     
-        # measure the time
+        # Measure the time
         start = time.time()
         # Generate text for the batch
         eos_token_id = tokenizer.eos_token_id  # Use the EOS token from your tokenizer
@@ -66,23 +79,21 @@ def generate_sequences(start_tokens,tokenizer,hf_model,batch_size=16,max_new_tok
             "repetition_penalty": 1.1,
             "eos_token_id": eos_token_id  # Explicitly set the EOS token ID
         }        
-        output = model.generate(inputs['input_ids'],attention_mask=inputs['attention_mask'], **gen_kwargs)
+        output = model.generate(inputs['input_ids'], attention_mask=inputs['attention_mask'], **gen_kwargs)
         output = output.cpu()
         end = time.time()
     
-        # append output to jsonl file
+        # Append output to jsonl file
         with open(output_file, 'a') as file:
             for generated_seq in output:
                 decoded_output = tokenizer.decode(generated_seq.tolist(), skip_special_tokens=True)
                 file.write(json.dumps({'text': decoded_output}) + '\n')
 
-        # time taken in seconds
+        # Time taken in seconds
         time_taken = end - start
         tokens_generated = sum([len(seq) for seq in output])
-        # log the time taken per batch
+        # Log the time taken per batch
         logging.info(f"Tokens per second: {tokens_generated/time_taken}")
-
-
 
 def main():
     # Create the argument parser
@@ -92,7 +103,7 @@ def main():
     parser.add_argument('--batch-size', type=int, default=16, help='Batch size for generation')
     parser.add_argument('--num-seqs', type=int, default=128, help='Number of sequences to generate')
     parser.add_argument('--max-new-tokens', type=int, default=800, help='Maximal number of tokens to generate')
-    parser.add_argument('--input-file', type=str, required=True, help='Path to the jsonl input file, for determining the distribution of the starting token')
+    parser.add_argument('--input-file', type=str, help='Path to the jsonl input file, for determining the distribution of the starting token')
     parser.add_argument('--output-file', type=str, required=True, help='Path to the jsonl output file, for writing the seqs to')
     parser.add_argument('--hf-model', type=str, default="apple/DCLM-Baseline-7B", help='HuggingFace model to use for generation')
 
@@ -100,14 +111,23 @@ def main():
     args = parser.parse_args()
     logging.info(f"Arguments received: {args}")
         
-    # Load tokenizer and model
+    # Load tokenizer
     tokenizer = AutoTokenizer.from_pretrained(args.hf_model)
     
-    start_tokens = generate_start_tokens(tokenizer,args.num_seqs,file_path = args.input_file)
-    generate_sequences(start_tokens,tokenizer,args.hf_model,batch_size=args.batch_size,max_new_tokens=args.max_new_tokens,output_file=args.output_file)
+    # Generate start tokens based on input file availability
+    if args.input_file:
+        logging.info("Generating start tokens from input file...")
+        start_tokens = generate_start_tokens(tokenizer, args.num_seqs, file_path=args.input_file)
+    else:
+        logging.info("Generating random start tokens from tokenizer's vocabulary...")
+        start_tokens = generate_random_tokens(tokenizer, args.num_seqs)
+
+    # Generate sequences
+    generate_sequences(start_tokens, tokenizer, args.hf_model, batch_size=args.batch_size, max_new_tokens=args.max_new_tokens, output_file=args.output_file)
 
 # Entry point of the script
 if __name__ == "__main__":
     main()
+
 
 
