@@ -101,7 +101,7 @@ python scripts/rewrite_texts_batch_auto.py \
 - `batch-size`: number of sequences being rephrased. Set to 2000 for a tier 1 OpenAI account
 - `prompt`: rephrasing prompt. Set to prompt1 or prompt2 or prompt3
 
-## Remove Formatting
+## Formatting Removal
 
 To remove formatting, run the following command:
 
@@ -137,7 +137,7 @@ where input file is a jsonl file with keys "text" and "url". This will print a b
 python scripts/categorise_text.py --retrieve BATCH_NUMBER --output-file output_results.jsonl
 ```
 
-## Generate Data
+## Data Generation
 
 We generate data from an LLM by prompting it with one single token with the following command: 
 
@@ -157,3 +157,15 @@ python scripts/generate_random_sequences.py \
 - `max-new-tokens`: Maximal number of tokens per sequence to generate
 - `output-file`: Jsonl file where the generated sequences are saved
 - `input-file`: Jsonl file from which the first token of each sequence is used to prompt the LLM. Must have equal or more sequences than `num-seqs`. If `input-file` is not specified, a token will be drawn uniformly at random
+
+## Mixture Proportions Estimation
+
+To estimate the mixture proportions of the domains an LLM was trained on, first train a classifier to distinguish between the potential domains. Second generate random sequences from the LLM and tokenize them into tensors as described [here](https://github.com/MLI-lab/LLM_data_bias/tree/main/data_preparation) under test data. Finally run the following command to classify the generated sequences:
+
+```
+python open_lm/classify.py \
+  --model open_lm_160m \
+  --classif-model-path path_to_classification_model \
+  --num-classes 7 \
+  --generated-data-path path_to_data_generated_from_LLM.pt
+```
