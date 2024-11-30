@@ -136,3 +136,24 @@ where input file is a jsonl file with keys "text" and "url". This will print a b
 ```
 python scripts/categorise_text.py --retrieve BATCH_NUMBER --output-file output_results.jsonl
 ```
+
+## Generate Data
+
+We generate data from an LLM by prompting it with one single token with the following command: 
+
+```
+python scripts/generate_random_sequences.py \
+  --hf-model apple/DCLM-Baseline-7B \
+  --batch-size 16 \
+  --num-seqs 8192 \
+  --max-new-tokens 800 \
+  --output-file path_to_output_file.jsonl \
+  --input-file path_to_input_file.jsonl
+```
+
+- `hf-model`: HuggingFace model. A list of all models used in the paper is found at the top of the [script](https://github.com/MLI-lab/LLM_data_bias/blob/main/scripts/generate_random_sequences.py)
+- `batch-size`: Batch size. Scale it to fill the GPU
+- `num-seqs`: Number of sequences to generate
+- `max-new-tokens`: Maximal number of tokens per sequence to generate
+- `output-file`: Jsonl file where the generated sequences are saved
+- `input-file`: Jsonl file from which the first token of each sequence is used to prompt the LLM. Must have equal or more sequences than `num-seqs`. If `input-file` is not specified, a token will be drawn uniformly at random
