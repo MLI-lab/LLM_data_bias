@@ -1,4 +1,4 @@
-This repository is based on the [Open LM](https://github.com/mlfoundations/open_lm) repository, which has been modified to allow for text classification. 
+This repository is based on the [Open LM](https://github.com/mlfoundations/open_lm) repository, which we modified to allow for text classification. 
 
 ## Installation
 We require python >=3.9 as well as several other packages. Start by cloning our project, and then installing the neccessary requirements as follows:
