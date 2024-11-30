@@ -160,7 +160,7 @@ python scripts/generate_random_sequences.py \
 
 ## Mixture Proportions Estimation
 
-To estimate the mixture proportions of the domains an LLM was trained on, first train a classifier to distinguish between the potential domains. Second generate random sequences from the LLM and tokenize them into tensors as described [here](https://github.com/MLI-lab/LLM_data_bias/tree/main/data_preparation) under test data. Finally run the following command to classify the generated sequences:
+To estimate the mixture proportions of the domains an LLM was trained on, first train a classifier to distinguish between the potential domains. Second generate random sequences from the LLM (do not specify `--input-file`) and tokenize them into tensors as described [here](https://github.com/MLI-lab/LLM_data_bias/tree/main/data_preparation) under test data. Finally run the following command to classify the generated sequences:
 
 ```
 python open_lm/classify.py \
