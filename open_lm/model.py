@@ -529,4 +529,14 @@ def test_classif_model(args):
     model.load_state_dict(checkpoint["state_dict"])
     
     return model    
+
+
+def test_perplexity_model(args):
+    model = Transformer(create_params(args))
     
+    checkpoint = pt_load(args.classif_model_path, map_location="cpu")
+    model.load_state_dict(checkpoint["state_dict"])
+    
+    return model  
+
+
