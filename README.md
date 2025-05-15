@@ -169,3 +169,7 @@ python open_lm/classify.py \
   --num-classes 7 \
   --generated-data-path path_to_data_generated_from_LLM.pt
 ```
+
+## Finetuned Models
+
+Check the [finetuned models](https://github.com/MLI-lab/LLM_data_bias/tree/main/finetuned_models) section.
