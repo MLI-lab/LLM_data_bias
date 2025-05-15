@@ -1,4 +1,4 @@
-#python Gemini.py --input-file openhermes2_5.jsonl --output-file Gemini.jsonl --end-index 15000
+#python Gemini.py --input-file openhermes2_5.jsonl --output-file Gemini_responses.jsonl --end-index 15000
 
 #Input your API key here
 API_KEY = "API_KEY_COMES_HERE"
