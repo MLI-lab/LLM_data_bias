@@ -84,9 +84,9 @@ python open_lm/eval.py \
 
 This example evaluates a 3-way classifier. The test sets (`C4.pt`, `FW.pt`, `RW.pt`) are specified with the same order as during training: C4 (class 0), FW (class 1), RW (class 2), and should be placed in `base-path`. Ensure that the number of strings in `test-sets` matches `num-classes`. The script adds the `.pt` extension automatically to the strings in `test-sets`. The script runs on one GPU by default.  
 
-## Perplexity
+## Generalisation
 
-For calculating the perplexity for generalisation, follow the previous instructions on preparing and tokenizing 3.2B training tokens from each of the seven main datasets (C4, FineWeb, RefinedWeb, DolmaCC, RedPajama-V2, DCLM, FineWeb-Edu). Pretrain a 160M transformer on each of the datasets. Then pretrain another transformer on a mixture of all datasets (3.2B tokens equally sampled from each dataset). 
+For calculating the perplexity for the generalisation experiments, follow the previous instructions on preparing and tokenizing 3.2B training tokens from each of the seven main datasets (C4, FineWeb, RefinedWeb, DolmaCC, RedPajama-V2, DCLM, FineWeb-Edu). Pretrain a 160M transformer on each of the datasets. Then pretrain another transformer on a mixture of all datasets (3.2B tokens equally sampled from each dataset). 
 
 Also prepare 1000 unseen evaluation sequences from each dataset. The evaluation sequences should be in `.jsonl` format, and in their raw text form (untokenized). Make sure they have the text sequences in the field `'text'`. 
 
@@ -99,7 +99,7 @@ python paloma.py
 ```
 which will store the data in the required format.
 
-To caluclate the perplexity run the notebook [Evaluate_perplexity](https://github.com/MLI-lab/LLM_data_bias/blob/main/perplexity/Evaluate_perplexity.ipynb), and set the model path and the directory to the evaluation data. 
+To calculate the perplexity run the notebook [Evaluate_perplexity](https://github.com/MLI-lab/LLM_data_bias/blob/main/perplexity/Evaluate_perplexity.ipynb), and set the model path and the directory to the evaluation data. 
 
 ## Rewriting
 
