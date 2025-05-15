@@ -1,4 +1,4 @@
-#python Qwen2.5.py --input-file openhermes2_5.jsonl --output-file Qwen_responses.jsonl --end-index 15000
+#python Qwen.py --input-file openhermes2_5.jsonl --output-file Qwen_responses.jsonl --end-index 15000
 
 #Input your API key here
 API_KEY = "API_KEY_COMES_HERE"
