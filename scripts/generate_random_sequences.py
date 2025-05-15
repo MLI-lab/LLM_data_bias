@@ -3,11 +3,8 @@
 # --hf-model "apple/DCLM-Baseline-7B"  # DCLM-Baseline (pretrained)
 # --hf-model "HuggingFaceFW/ablation-model-fineweb-edu" #FineWeb-Edu (pretrained)
 
-# Section  5.1 in the paper
-# --hf-model "tiiuae/falcon-7b-instruct" # RefinedWeb (finetuned)
-# --hf-model "mlfoundations/dclm-7b-it" # DCLM (finetuned)
 
-# Section 6 in the paper
+# Section 5.1 in the paper
 # --hf-model "MBZUAI-LLM/SlimPajama-DC" # SlimPajama (pretrained)
 # When using this model, modify the code below to inlcude "revision" when loading the model and the tokenizer as such:
 # tokenizer = AutoTokenizer.from_pretrained(hf_model, revision="SlimPajama-DC-6")
@@ -15,6 +12,11 @@
 # revision= "SlimPajama-DC-6" is for the LLM pretrained on all 7 domains
 # revision= "SlimPajama-DC-5" is for the LLM pretrained on only 4 domains
 # More info can be found here: https://huggingface.co/MBZUAI-LLM/SlimPajama-DC
+
+
+# Appendix G in the paper
+# --hf-model "tiiuae/falcon-7b-instruct" # RefinedWeb (finetuned)
+# --hf-model "mlfoundations/dclm-7b-it" # DCLM (finetuned)
 
 
 import json
